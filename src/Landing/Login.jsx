@@ -95,14 +95,6 @@ const Login = () => {
           >
             Login
           </Button>
-
-          {/* Signup Redirect */}
-          <Text mt={4} fontSize="sm" textAlign="center">
-            Don't have an account?{" "}
-            <Text as="span" color="cyan.300" cursor="pointer" onClick={() => navigate("/signup")}>
-              Sign up
-            </Text>
-          </Text>
         </Box>
 
         {/* Right Side - Image */}
