@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Loginimg from "../images/loginimg.jpg";
 import {
   Box,
   Flex,
@@ -8,6 +9,8 @@ import {
   Input,
   Button,
   Text,
+  Grid,
+  Image,
   useColorModeValue
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +31,6 @@ const Login = () => {
   // Handle Login (Replace with actual auth logic)
   const handleLogin = () => {
     console.log("Logging in with:", email, password);
-    // Add authentication logic here (Firebase, API call, etc.)
     navigate("/dashboard"); // Redirect to dashboard after login
   };
 
@@ -41,64 +43,79 @@ const Login = () => {
       color={textColor}
       px={6}
     >
-      <Box
+      <Grid
+        templateColumns={{ base: "1fr", md: "1fr 1fr" }} // Stacks on mobile, side-by-side on desktop
         bg="rgba(255, 255, 255, 0.1)"
-        p={8}
         borderRadius="lg"
         boxShadow="lg"
-        w={{ base: "full", md: "400px" }}
+        w={{ base: "full", md: "800px" }}
+        overflow="hidden"
       >
-        <Heading as="h2" size="lg" textAlign="center" mb={6}>
-          Login to <Text as="span" color="cyan.300">NeoCred</Text>
-        </Heading>
+        {/* Left Side - Login Form */}
+        <Box p={8} w="100%">
+          <Heading as="h2" size="lg" textAlign="center" mb={6}>
+            Login to <Text as="span" color="cyan.300">NeoCred</Text>
+          </Heading>
 
-        {/* Email Input */}
-        <FormControl mb={5}>
-          <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            bg={inputBg}
-            border="none"
-            _focus={{ borderColor: "cyan.400" }}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </FormControl>
+          {/* Email Input */}
+          <FormControl mb={5}>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              bg={inputBg}
+              border="none"
+              _focus={{ borderColor: "cyan.400" }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
 
-        {/* Password Input */}
-        <FormControl mb={5}>
-          <FormLabel>Password</FormLabel>
-          <Input
-            type="password"
-            placeholder="Enter your password"
-            bg={inputBg}
-            border="none"
-            _focus={{ borderColor: "cyan.400" }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FormControl>
+          {/* Password Input */}
+          <FormControl mb={5}>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Enter your password"
+              bg={inputBg}
+              border="none"
+              _focus={{ borderColor: "cyan.400" }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
 
-        {/* Login Button */}
-        <Button
-          colorScheme="cyan"
-          w="full"
-          size="lg"
-          _hover={{ bg: "cyan.400" }}
-          onClick={handleLogin}
-        >
-          Login
-        </Button>
+          {/* Login Button */}
+          <Button
+            colorScheme="cyan"
+            w="full"
+            size="lg"
+            _hover={{ bg: "cyan.400" }}
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
 
-        {/* Signup Redirect */}
-        <Text mt={4} fontSize="sm" textAlign="center">
-          Don't have an account?{" "}
-          <Text as="span" color="cyan.300" cursor="pointer" onClick={() => navigate("/signup")}>
-            Sign up
+          {/* Signup Redirect */}
+          <Text mt={4} fontSize="sm" textAlign="center">
+            Don't have an account?{" "}
+            <Text as="span" color="cyan.300" cursor="pointer" onClick={() => navigate("/signup")}>
+              Sign up
+            </Text>
           </Text>
-        </Text>
-      </Box>
+        </Box>
+
+        {/* Right Side - Image */}
+        <Box display={{ base: "none", md: "block" }}> {/* Hide image on mobile */}
+          <Image
+            src={Loginimg} // Replace with actual login image
+            alt="Login Illustration"
+            objectFit="cover"
+            h="100%"
+            w="100%"
+          />
+        </Box>
+      </Grid>
     </Flex>
   );
 };
