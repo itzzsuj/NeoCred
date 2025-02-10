@@ -1,18 +1,20 @@
-import Main from './Landing/Main'
-import "./App.css"; // or wherever your global styles are located
-import Login from './Landing/Login';
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Main from "./Landing/Main";
+import Login from "./Landing/Login";
+import CustomerPage from "./Landing/CustomerPage"; // Import new Customer Page component
+import "./App.css"; // Ensure styles are correctly imported
 
-
-function App(){
+function App() {
   return (
     <BrowserRouter>
-    <Routes>
-    <Route path='/' element={<Main></Main>}></Route>
-    <Route path='/login' element={<Login></Login>}></Route>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/customer" element={<CustomerPage />} /> {/* ✅ Added CustomerPage route */}
+      </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { auth } from "../firebase/firebase"; // Ensure correct import
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import Loginimg from "../images/loginimg.jpg";
 import {
   Box,
@@ -16,7 +17,6 @@ import {
   useColorModeValue,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -43,32 +43,19 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("Login successful");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("Login successful", user);
       setError("");
-      navigate("/dashboard"); // Redirect to dashboard after login
+      navigate("/customer"); // ✅ Redirect to Customer Page
     } catch (err) {
       setError("Invalid email or password. Please try again.");
     }
   };
 
   return (
-    <Flex
-      minH="100vh"
-      align="center"
-      justify="center"
-      bgGradient={bgGradient}
-      color={textColor}
-      px={6}
-    >
-      <Grid
-        templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-        bg="rgba(255, 255, 255, 0.1)"
-        borderRadius="lg"
-        boxShadow="lg"
-        w={{ base: "full", md: "800px" }}
-        overflow="hidden"
-      >
+    <Flex minH="100vh" align="center" justify="center" bgGradient={bgGradient} color={textColor} px={6}>
+      <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} bg="rgba(255, 255, 255, 0.1)" borderRadius="lg" boxShadow="lg" w={{ base: "full", md: "800px" }} overflow="hidden">
         {/* Left Side - Login Form */}
         <Box p={8} w="100%">
           <Heading as="h2" size="lg" textAlign="center" mb={6}>
@@ -78,55 +65,25 @@ const Login = () => {
           {/* Email Input */}
           <FormControl mb={5} isInvalid={error}>
             <FormLabel>Email</FormLabel>
-            <Input
-              color="black"  // ✅ Ensures text inside input is black
-              type="email"
-              placeholder="Enter your email (example@axis.com)"
-              bg={inputBg}
-              border="none"
-              _focus={{ borderColor: "cyan.400" }}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Input color="black" type="email" placeholder="Enter your email (example@axis.com)" bg={inputBg} border="none" _focus={{ borderColor: "cyan.400" }} value={email} onChange={(e) => setEmail(e.target.value)} />
             {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
 
           {/* Password Input */}
           <FormControl mb={5}>
             <FormLabel>Password</FormLabel>
-            <Input
-              color="black"  // ✅ Ensures text inside input is black
-              type="password"
-              placeholder="Enter your password"
-              bg={inputBg}
-              border="none"
-              _focus={{ borderColor: "cyan.400" }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input color="black" type="password" placeholder="Enter your password" bg={inputBg} border="none" _focus={{ borderColor: "cyan.400" }} value={password} onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
 
           {/* Login Button */}
-          <Button
-            colorScheme="cyan"
-            w="full"
-            size="lg"
-            _hover={{ bg: "cyan.400" }}
-            onClick={handleLogin}
-          >
+          <Button colorScheme="cyan" w="full" size="lg" _hover={{ bg: "cyan.400" }} onClick={handleLogin}>
             Login
           </Button>
         </Box>
 
         {/* Right Side - Image */}
         <Box display={{ base: "none", md: "block" }}>
-          <Image
-            src={Loginimg}
-            alt="Login Illustration"
-            objectFit="cover"
-            h="100%"
-            w="100%"
-          />
+          <Image src={Loginimg} alt="Login Illustration" objectFit="cover" h="100%" w="100%" />
         </Box>
       </Grid>
     </Flex>
