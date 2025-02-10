@@ -8,6 +8,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "cra-template": "1.2.0",
+    "firebase": "^11.3.0",
     "framer-motion": "^12.4.1",
     "gsap": "^3.12.7",
     "react": "^19.0.0",

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { auth } from "../firebase/firebase"; // Ensure correct import
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Loginimg from "../images/loginimg.jpg";
 import {
   Box,
@@ -11,7 +13,8 @@ import {
   Text,
   Grid,
   Image,
-  useColorModeValue
+  useColorModeValue,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +22,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // Dark/Light mode adaptive colors
   const bgGradient = useColorModeValue(
@@ -28,10 +32,24 @@ const Login = () => {
   const textColor = useColorModeValue("white", "gray.200");
   const inputBg = useColorModeValue("gray.100", "gray.700");
 
-  // Handle Login (Replace with actual auth logic)
-  const handleLogin = () => {
-    console.log("Logging in with:", email, password);
-    navigate("/dashboard"); // Redirect to dashboard after login
+  // Validate email format (must end with @axis.com)
+  const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@axis\.com$/.test(email);
+
+  // Handle Firebase Login
+  const handleLogin = async () => {
+    if (!isValidEmail(email)) {
+      setError("Email must be in the format: example@axis.com");
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log("Login successful");
+      setError("");
+      navigate("/dashboard"); // Redirect to dashboard after login
+    } catch (err) {
+      setError("Invalid email or password. Please try again.");
+    }
   };
 
   return (
@@ -44,7 +62,7 @@ const Login = () => {
       px={6}
     >
       <Grid
-        templateColumns={{ base: "1fr", md: "1fr 1fr" }} // Stacks on mobile, side-by-side on desktop
+        templateColumns={{ base: "1fr", md: "1fr 1fr" }}
         bg="rgba(255, 255, 255, 0.1)"
         borderRadius="lg"
         boxShadow="lg"
@@ -58,17 +76,18 @@ const Login = () => {
           </Heading>
 
           {/* Email Input */}
-          <FormControl mb={5}>
+          <FormControl mb={5} isInvalid={error}>
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter your email (example@axis.com)"
               bg={inputBg}
               border="none"
               _focus={{ borderColor: "cyan.400" }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {error && <FormErrorMessage>{error}</FormErrorMessage>}
           </FormControl>
 
           {/* Password Input */}
@@ -98,9 +117,9 @@ const Login = () => {
         </Box>
 
         {/* Right Side - Image */}
-        <Box display={{ base: "none", md: "block" }}> {/* Hide image on mobile */}
+        <Box display={{ base: "none", md: "block" }}>
           <Image
-            src={Loginimg} // Replace with actual login image
+            src={Loginimg}
             alt="Login Illustration"
             objectFit="cover"
             h="100%"
