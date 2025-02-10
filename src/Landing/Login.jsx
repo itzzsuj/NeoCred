@@ -79,6 +79,7 @@ const Login = () => {
           <FormControl mb={5} isInvalid={error}>
             <FormLabel>Email</FormLabel>
             <Input
+              color="black"  // ✅ Ensures text inside input is black
               type="email"
               placeholder="Enter your email (example@axis.com)"
               bg={inputBg}
@@ -94,6 +95,7 @@ const Login = () => {
           <FormControl mb={5}>
             <FormLabel>Password</FormLabel>
             <Input
+              color="black"  // ✅ Ensures text inside input is black
               type="password"
               placeholder="Enter your password"
               bg={inputBg}
