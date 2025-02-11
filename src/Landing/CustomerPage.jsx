@@ -66,9 +66,14 @@ const CustomerPage = () => {
     navigate("/"); // Redirect to home page after logout
   };
 
+  // Handle Customer Click
+  const handleCustomerClick = (customerId) => {
+    navigate(`/dashboard/${customerId}`); // Redirect to customer dashboard with customerId
+  };
+
   return (
     <Box minH="100vh" bg="#2F3C7E" color="white">
-      {/* ✅ Restored Navbar Exactly as Before */}
+      {/* ✅ Navbar (Same as Before) */}
       <Flex
         as="nav"
         bg="#2F3C7E"
@@ -152,7 +157,15 @@ const CustomerPage = () => {
                 customers.map((customer) => (
                   <Tr key={customer.id}>
                     <Td>{customer.name}</Td>
-                    <Td>{customer.customerId}</Td>
+                    {/* ✅ Clickable Customer ID */}
+                    <Td
+                      color="blue.500"
+                      cursor="pointer"
+                      _hover={{ textDecoration: "underline" }}
+                      onClick={() => handleCustomerClick(customer.customerId)}
+                    >
+                      {customer.customerId}
+                    </Td>
                     <Td>{customer.accountNumber}</Td>
                   </Tr>
                 ))
