@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Papa from "papaparse";
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   Flex,
   VStack,
   Divider,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   BarChart,
@@ -26,12 +27,24 @@ import { FaArrowLeft } from "react-icons/fa";
 const CustomerDashboard = () => {
   const { customerId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const csvUrl = location.state?.csvUrl; // ✅ Get CSV URL from `CustomerPage.js`
 
   useEffect(() => {
+    if (!csvUrl) {
+      setLoading(false);
+      return;
+    }
+
     const fetchCSVData = async () => {
       try {
-        const response = await fetch(`/data/output (1).csv`); // Always fetch "output (1).csv"
+        console.log(`📂 Fetching CSV from: ${csvUrl}`);
+
+        const response = await fetch(csvUrl);
+        if (!response.ok) throw new Error("Failed to fetch CSV file");
+
         const text = await response.text();
         Papa.parse(text, {
           header: true,
@@ -50,16 +63,19 @@ const CustomerDashboard = () => {
               NetSavings: row.Net_Savings,
             }));
 
+            console.log("📊 Parsed CSV Data:", formattedData); // Debugging Log
             setChartData(formattedData);
+            setLoading(false);
           },
         });
       } catch (error) {
-        console.error("Error fetching CSV data:", error);
+        console.error("❌ Error fetching CSV data:", error);
+        setLoading(false);
       }
     };
 
     fetchCSVData();
-  }, [customerId]);
+  }, [csvUrl]);
 
   return (
     <Flex minH="100vh" bg="#2F3C7E" color="white">
@@ -73,7 +89,7 @@ const CustomerDashboard = () => {
           <Text fontSize="lg" fontWeight="bold">Customer Dashboard</Text>
           <Text fontSize="md">Customer ID: {customerId}</Text>
 
-          {/* ✅ New "Check Loan Eligibility" Button */}
+          {/* ✅ "Check Loan Eligibility" Button */}
           <Button colorScheme="yellow" onClick={() => navigate(`/loan-eligibility/${customerId}`)}>
             Check Loan Eligibility
           </Button>
@@ -86,37 +102,46 @@ const CustomerDashboard = () => {
           {customerId.charAt(0).toUpperCase() + customerId.slice(1)}'s Analytics
         </Text>
 
-        {/* Bar Chart: Credit vs Debit */}
-        <Box bg="white" p={4} borderRadius="lg" boxShadow="md" color="black" w="80%" mb={6}>
-          <Text fontSize="lg" fontWeight="bold" textAlign="center">Monthly Credit vs Debit</Text>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Credit" fill="green" barSize={50} />
-              <Bar dataKey="Debit" fill="red" barSize={50} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Box>
+        {loading ? (
+          <Spinner size="xl" />
+        ) : csvUrl ? (
+          <>
+            {/* Bar Chart: Credit vs Debit */}
+            <Box bg="white" p={4} borderRadius="lg" boxShadow="md" color="black" w="80%" mb={6}>
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Monthly Credit vs Debit</Text>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="Month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="Credit" fill="green" barSize={50} />
+                  <Bar dataKey="Debit" fill="red" barSize={50} />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
 
-        {/* Line Chart: Net Savings Over Time */}
-        <Box bg="white" p={4} borderRadius="lg" boxShadow="md" color="black" w="80%">
-          <Text fontSize="lg" fontWeight="bold" textAlign="center">Net Savings Trend</Text>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="NetSavings" stroke="blue" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </Box>
-
+            {/* Line Chart: Net Savings Over Time */}
+            <Box bg="white" p={4} borderRadius="lg" boxShadow="md" color="black" w="80%">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Net Savings Trend</Text>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="Month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="NetSavings" stroke="blue" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          </>
+        ) : (
+          <Text fontSize="lg" fontWeight="bold" color="red.400">
+            ❌ No CSV file available for this customer.
+          </Text>
+        )}
       </Box>
     </Flex>
   );
