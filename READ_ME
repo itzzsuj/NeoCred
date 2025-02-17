@@ -1,0 +1,39 @@
+NEO CRED - Machine Learning Module
+Overview
+The NEO CRED ML module is designed to predict loan eligibility & assess financial risk using AI-driven credit scoring models. The system leverages Federated Learning (FL) to enhance privacy, Explainable AI (XAI) for transparency, and deep learning models to evaluate financial health.
+
+Key Features
+✅ AI-Powered Credit Scoring
+Uses spending behavior, income trends, and transaction patterns to generate a risk score (0-100).
+Categorizes users into Very Risky, Medium Risk, and Safe for loan approval.
+✅ Federated Learning for Privacy
+Instead of sharing raw financial data, only model updates are sent to a centralized FL server.
+Helps in decentralized learning while maintaining user privacy.
+✅ Explainable AI (XAI) for Transparency
+SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) to explain loan decisions.
+Users & banks can see why a loan was approved/rejected.
+✅ AI-Powered Smart Loan Adjustments
+Dynamic credit limit adjustments based on user spending behavior.
+Early warnings for high-risk borrowers to prevent loan defaults.
+Model Pipeline
+1️⃣ Data Preprocessing
+
+Extracts credit, debit, balance, & transaction frequency from bank statements.
+Normalizes & encodes categorical data for AI training.
+2️⃣ Federated Learning-Based Model Training
+
+Uses a deep learning model (MLP - Multi-layer Perceptron) trained with FL clients.
+FL clients send local model updates instead of user data.
+3️⃣ Risk Scoring & Loan Eligibility Classification
+
+Generates a Risk Score (0-100) using AI models.
+Uses softmax classification to determine loan approval categories.
+4️⃣ Explainability Layer (SHAP & LIME)
+
+Generates SHAP importance plots to explain AI decisions.
+Uses LIME to generate human-readable explanations for loan officers & users.
+Performance Metrics
+Accuracy: 72%
+Precision: Weighted precision for loan eligibility
+Recall: Identifies high-risk users correctly
+F1-Score: Balances precision & recall for reliable predictions
